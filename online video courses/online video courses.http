@@ -1,0 +1,6 @@
+@online_video_courses_HostAddress = http://localhost:5196
+
+GET {{online_video_courses_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
