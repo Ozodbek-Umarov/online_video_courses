@@ -1,9 +1,11 @@
 ﻿using OnlineVideoCourses.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineVideoCourse.Aplication.DTOs.UserDTOs;
 
 public class UserDto : AddUserDto
 {
+    [Required(ErrorMessage = "id name is required")]
     public int Id { get; set; }
 
     public static implicit operator UserDto(User user)

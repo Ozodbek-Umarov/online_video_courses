@@ -1,5 +1,6 @@
 ﻿using OnlineVideoCourses.Domain.Entities;
 using OnlineVideoCourses.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Reflection;
 
@@ -7,11 +8,15 @@ namespace OnlineVideoCourse.Aplication.DTOs.UserDTOs;
 
 public class AddUserDto
 {
+    [Required(ErrorMessage = "First name is required")]
     public string FirstName { get; set; } = "";
+    [Required(ErrorMessage = "Last name is required")]
     public string LastName { get; set; } = "";
+    [Required(ErrorMessage = "Email is required")]
     public string Email { get; set; } = "";
     public bool IsVerified { get; set; } = false;
     public Gender Gender { get; set; }
+    [Required(ErrorMessage = "Password is required")]
     public string Password { get; set; } = "";
     public Role Role { get; set; } = Role.User;
 
