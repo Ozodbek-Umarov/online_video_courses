@@ -40,7 +40,7 @@ public class CategoryService(IUnitOfWork unitOfWork,
 
     public async Task<IEnumerable<CategoryDto>> GetAllAsync(PaginationParams @params)
     {
-        var categories = await _unitOfWork.Category.GetAllAsync();
+        var categories = _unitOfWork.Category.GetAll();
 
         var metadata = new PaginationMetaData(categories.Count(), @params.PageIndex, @params.PageSize);
         _accessor.HttpContext?.Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));

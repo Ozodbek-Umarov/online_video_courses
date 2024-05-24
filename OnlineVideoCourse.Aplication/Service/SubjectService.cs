@@ -51,7 +51,7 @@ public class SubjectService(IUnitOfWork unitOfWork,
 
     public async Task<IEnumerable<SubjectDto>> GetAllAsync(PaginationParams @params)
     {
-        var subjects = await _unitOfWork.Subject.GetAllAsync();
+        var subjects = _unitOfWork.Subject.GetAll();
         var totalCount = subjects.Count();
 
         var pagedSubjects = subjects

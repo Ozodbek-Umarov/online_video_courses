@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using online_video_courses.Middlewares;
 using OnlineVideoCourses.Data.DbContexts;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Serilog
+//builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+//loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration));
+
+
+// Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("LocalDB"));
@@ -27,7 +35,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandleMiddleware>();
 
 app.MapControllers();
 
