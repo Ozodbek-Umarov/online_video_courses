@@ -23,11 +23,12 @@ public class GenericRepository<T>(AppDbContext dbContext)
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<T>> GetAllAsync()
-        => await _dbSet.ToListAsync();
+    public IQueryable<T> GetAll()
+        => _dbSet;
 
     public async Task<T?> GetByIdAsync(int id)
         => await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+
     public async Task UpdateAsync(T entity)
     {
         _dbSet.Update(entity);

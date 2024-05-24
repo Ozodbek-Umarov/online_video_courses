@@ -23,7 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 Gender = Gender.Male,
                 IsVerified = true,
                 Password = "186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae",
-                Role = Role.Admin
+                Role = Role.SuperAdmin
             });
     }
 }

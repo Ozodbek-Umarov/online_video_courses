@@ -1,5 +1,9 @@
-﻿using OnlineVideoCourse.Aplication.Common.Exseption;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using OnlineVideoCourse.Aplication.Common.Exseption;
 using OnlineVideoCourse.Aplication.Common.Helper;
+using OnlineVideoCourse.Aplication.Common.Utils;
 using OnlineVideoCourse.Aplication.DTOs.UserDTOs;
 using OnlineVideoCourse.Aplication.Interfaces;
 using OnlineVideoCourses.Data.Interfaces;
@@ -8,9 +12,11 @@ using System.Net;
 
 namespace OnlineVideoCourse.Aplication.Service;
 
-public class UserService(IUnitOfWork unitOfWork) : IUserService
+public class UserService(IUnitOfWork unitOfWork,
+                         IHttpContextAccessor accessor) : IUserService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IHttpContextAccessor _accessor = accessor;
 
     public async Task DeleteAsync(int id)
     {
@@ -21,10 +27,21 @@ public class UserService(IUnitOfWork unitOfWork) : IUserService
         throw new StatusCodeExeption(HttpStatusCode.OK, "User has been deleted sucessfully");
     }
 
-    public async Task<List<UserDto>> GetAllAsync()
+    public async Task<IEnumerable<UserDto>> GetAllAsync(PaginationParams @params)
     {
-        var users = await _unitOfWork.User.GetAllAsync();
-        return users.Select(x => (UserDto)x).ToList();
+        var users = _unitOfWork.User.GetAll();
+
+        var totalCount = await users.CountAsync();
+        var paginationMetaData = new PaginationMetaData(totalCount, @params.PageIndex, @params.PageSize);
+        _accessor.HttpContext?.Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetaData));
+
+        var pagedUsers = await users
+            .Skip(@params.SkipCount())
+            .Take(@params.PageSize)
+            .Select(x => (UserDto)x)
+            .ToListAsync();
+
+        return pagedUsers;
     }
 
     public async Task<UserDto> GetByIdAsync(int id)
