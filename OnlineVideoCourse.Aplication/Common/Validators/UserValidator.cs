@@ -28,6 +28,5 @@ public class UserValidator : AbstractValidator<User>
              .WithMessage("Password bosh bolmasligi lozim")
              .Length(6, 16)
              .WithMessage("Password 6 va 16 orasida bolishi kerak");
-
     }
 }
